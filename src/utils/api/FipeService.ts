@@ -30,9 +30,9 @@ export default class FipeService {
 
     static filterReferenceTablesByModelYear(
         referenceTables: ReferenceTable[],
-        modelYearObject: VehicleModelYear
+        modelYearID: string
     ): ReferenceTable[] {
-        const modelYear = Number(modelYearObject.id.split("-")[0]);
+        const modelYear = Number(modelYearID.split("-")[0]);
 
         const filteredReferenceTables = referenceTables.filter(
             (referenceTable) => {

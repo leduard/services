@@ -18,3 +18,22 @@ interface VehicleModelYear {
     /** ("2018 Gasolina") */
     name: string;
 }
+
+interface VehicleData {
+    id: string;
+    price: number;
+    brand: string;
+    model: string;
+    year: number;
+    fuelType: string;
+    fipeCode: string;
+    referenceDate: {
+        month: string;
+        year: number;
+        date?: Date;
+    };
+    authentication: string;
+    vehicleType: number;
+    fuelTypeShort: string;
+    searchDate: Date;
+}
