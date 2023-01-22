@@ -80,7 +80,7 @@ export default function Results({
     return (
         <>
             <Head>
-                <title>Resultado consulta</title>
+                <title>{`Resultado consulta - ${chartData[0].model}`}</title>
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
