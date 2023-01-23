@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { Container } from "@mui/material";
+import Router from "next/router";
+import { Button, Container, Typography } from "@mui/material";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import FipeService from "@/utils/api/FipeService";
@@ -76,11 +77,26 @@ export default function Results({
     error,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const chartData = results.filter((r) => r.referenceDate.date);
+    const vehicleData = chartData[0];
+    const latestVehicleData = chartData[chartData.length - 1] || {};
+    const latestVehicleDataPrice = latestVehicleData?.price?.toLocaleString(
+        "pt-BR",
+        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    );
+
+    const hasError = (error && error.message) || !chartData.length;
+    const pageTitle = hasError
+        ? "Resultado consulta"
+        : `Resultado consulta - ${vehicleData.model} - ${vehicleData.year}`;
+    const pageDescription = hasError
+        ? "Consulta de dados da table FIPE"
+        : `Consulta de dados da table FIPE - ${vehicleData.model} - ${vehicleData.year}.\nValor no ultimo mês: R$ ${latestVehicleDataPrice}`;
 
     return (
         <>
             <Head>
-                <title>{`Resultado consulta - ${chartData[0].model}`}</title>
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
@@ -95,8 +111,75 @@ export default function Results({
                     height: "100vh",
                 }}
             >
-                <h1>xd</h1>
-                <ResultChart data={chartData} />
+                {hasError ? (
+                    <>
+                        <Typography
+                            variant="h5"
+                            component="h3"
+                            fontWeight="bold"
+                            align="center"
+                        >
+                            {error?.message ||
+                                "Não foi possível encontrar os dados"}
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={() => Router.push("/fipe")}
+                            sx={{ marginTop: 3 }}
+                        >
+                            Voltar para página de busca
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Typography
+                            variant="h3"
+                            component="h1"
+                            fontWeight="bold"
+                            align="center"
+                        >
+                            Resultado consulta FIPE
+                        </Typography>
+
+                        <Typography
+                            variant="subtitle1"
+                            fontWeight="light"
+                            align="center"
+                            lineHeight={1.3}
+                            marginTop={2}
+                        >
+                            {vehicleData.brand} {vehicleData.model} - Ano{" "}
+                            {vehicleData.year}
+                        </Typography>
+                        <Typography
+                            variant="subtitle1"
+                            fontWeight="light"
+                            align="center"
+                            lineHeight={1.3}
+                        >
+                            Valor no ultimo mês: R${" "}
+                            {latestVehicleData?.price.toLocaleString("pt-BR", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            })}
+                        </Typography>
+                        <Container sx={{ marginTop: 3, height: "475px" }}>
+                            <ResultChart data={chartData} />
+                        </Container>
+
+                        <Typography
+                            variant="subtitle2"
+                            fontWeight="light"
+                            align="center"
+                        >
+                            Dados coletados em:{" "}
+                            {new Date(
+                                vehicleData.searchDate
+                            ).toLocaleDateString()}
+                        </Typography>
+                    </>
+                )}
             </Container>
         </>
     );

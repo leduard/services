@@ -17,7 +17,6 @@ ChartJS.register(
     LinearScale,
     PointElement,
     LineElement,
-    Title,
     Tooltip,
     Legend
 );
@@ -31,9 +30,9 @@ export default function ResultChart({ data }: ResultChartProps) {
 
     const options: ChartOptions<"line"> = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
-            legend: { position: "top" as const },
-            title: { display: true, text: "Gráfico de preços" },
+            legend: { position: "bottom" as const },
         },
     };
 
@@ -51,8 +50,8 @@ export default function ResultChart({ data }: ResultChartProps) {
                     {
                         label: data[0].model,
                         data: labels.map((_, index) => data[index].price),
-                        borderColor: theme.palette.primary.dark,
-                        backgroundColor: theme.palette.primary.main,
+                        borderColor: theme.palette.secondary.dark,
+                        backgroundColor: theme.palette.secondary.dark,
                     },
                 ],
             }}
