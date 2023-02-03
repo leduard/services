@@ -49,7 +49,7 @@ export default async function handler(
 
 function splitReferenceTableInChunks(
     referenceTables: ReferenceTable[],
-    chunkSize: number = 50
+    chunkSize: number = 75
 ): ReferenceTable[][] {
     const chunks: ReferenceTable[][] = [];
 
